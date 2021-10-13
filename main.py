@@ -17,7 +17,7 @@ class App(tk.Tk):
         # Create background image
         lbl = ImageLabel(self)
         lbl.pack()
-        lbl.load('data/robot.gif')
+        lbl.load('data/Gift/robot.gif')
 
         # place a button on the root window for action analysis window
         tk.Button(self,
@@ -53,7 +53,7 @@ class App(tk.Tk):
         """
         self.window_config = tk.Toplevel(self.master)
         self.window_config.grab_set()
-        self.window_config.geometry("500x550")
+        self.window_config.geometry("500x500")
         self.window_config.title('LOLA - Configuración del dispositivo')
 
         # Prepare buttons for the dialog
@@ -65,11 +65,11 @@ class App(tk.Tk):
         action_label = tk.Label(self.window_config, text="Acciones")
         action_label.place(x=22, y=190)
         oad_label = tk.Label(self.window_config, text="Activar detección de acciones en tiempo real")
-        oad_label.place(x=22, y=260)
+        oad_label.place(x=90, y=260)
         atp_label = tk.Label(self.window_config, text="Activar tracking de la persona")
-        atp_label.place(x=22, y=320)
+        atp_label.place(x=140, y=320)
         rg_label = tk.Label(self.window_config, text="Generar informe")
-        rg_label.place(x=22, y=380)
+        rg_label.place(x=190, y=380)
 
         self.dni = tk.StringVar()
         self.username = tk.StringVar()
@@ -95,16 +95,13 @@ class App(tk.Tk):
         self.dni_entry.place(x=22, y=100)
         self.username_entry.place(x=22, y=160)
 
-        c1 = tk.Checkbutton(self.window_config, text='SI', variable=self.var1, onvalue=1, offvalue=0).place(x=122, y=290)
-        c2 = tk.Checkbutton(self.window_config, text='NO', variable=self.var2, onvalue=1, offvalue=0).place(x=292, y=290)
-        c3 = tk.Checkbutton(self.window_config, text='SI', variable=self.var3, onvalue=1, offvalue=0).place(x=122, y=350)
-        c4 = tk.Checkbutton(self.window_config, text='NO', variable=self.var4, onvalue=1, offvalue=0).place(x=292, y=350)
-        c5 = tk.Checkbutton(self.window_config, text='SI', variable=self.var5, onvalue=1, offvalue=0).place(x=122, y=410)
-        c6 = tk.Checkbutton(self.window_config, text='NO', variable=self.var6, onvalue=1, offvalue=0).place(x=292, y=410)
+        c1 = tk.Checkbutton(self.window_config, text='SI', variable=self.var1, onvalue=1, offvalue=0).place(x=220, y=290)
+        c2 = tk.Checkbutton(self.window_config, text='SI', variable=self.var3, onvalue=1, offvalue=0).place(x=220, y=350)
+        c3 = tk.Checkbutton(self.window_config, text='SI', variable=self.var5, onvalue=1, offvalue=0).place(x=220, y=410)
 
 
         submit_btn = tk.Button(self.window_config, text="Guardar", command=self.send_data, width="25", height="2")
-        submit_btn.place(x=150, y=490)
+        submit_btn.place(x=150, y=445)
 
         self.window_config.mainloop()
 
