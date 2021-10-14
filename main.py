@@ -33,7 +33,6 @@ class App(tk.Tk):
         """
         self.window_oaa = tk.Toplevel(self.master)
         self.window_oaa.grab_set()
-        self.window_oaa.geometry('250x80')
         self.window_oaa.title('LOLA - Monitorizacion de acciones')
         # Prepare buttons for the dialog
         # Button to start activity (with video visualization)
@@ -66,7 +65,7 @@ class App(tk.Tk):
         action_label.place(x=22, y=190)
         oad_label = tk.Label(self.window_config, text="Activar detección de acciones en tiempo real")
         oad_label.place(x=90, y=260)
-        atp_label = tk.Label(self.window_config, text="Activar tracking de la persona")
+        atp_label = tk.Label(self.window_config, text="Activar analisis de la pose")
         atp_label.place(x=140, y=320)
         rg_label = tk.Label(self.window_config, text="Generar informe")
         rg_label.place(x=190, y=380)
@@ -111,7 +110,7 @@ class App(tk.Tk):
         """
         # VLC player object
         # TODO: select from the dataset of activities
-        video_name = "data/video_baby_shark.mp4"
+        video_name = "data/Video/Lavarlosdientes.mp4"
         self.player = Player(self.window_oaa, title='LOLA - Monitorizacion de acciones',  video=video_name)
         self.window_oaa.protocol(("WM_DELETE_WINDOW", self.player.OnClose))
 
