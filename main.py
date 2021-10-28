@@ -3,7 +3,7 @@ import tkinter as tk
 from utilities import ImageLabel
 import vlc
 from tkvlc import Player
-
+import json
 
 class App(tk.Tk):
     """
@@ -47,6 +47,8 @@ class App(tk.Tk):
         self.window_oaa.mainloop()
 
     def open_configuration(self):
+        x = 'json'
+        y = json.loads(x)
         """
         function to create Dialog for action analysis window
         """
@@ -57,50 +59,64 @@ class App(tk.Tk):
 
         # Prepare buttons for the dialog
         conf_label = tk.Label(self.window_config, text="Configuración").place(x=210, y=30)
-        dni_label = tk.Label(self.window_config, text="DNI")
+        dni_label = tk.Label(self.window_config, text="Usuario")
         dni_label.place(x=22, y=70)
-        username_label = tk.Label(self.window_config, text="Nombre")
-        username_label.place(x=22, y=130)
         action_label = tk.Label(self.window_config, text="Acciones")
-        action_label.place(x=22, y=190)
+        action_label.place(x=22, y=130)
         oad_label = tk.Label(self.window_config, text="Activar detección de acciones en tiempo real")
-        oad_label.place(x=90, y=260)
-        atp_label = tk.Label(self.window_config, text="Activar analisis de la pose")
-        atp_label.place(x=140, y=320)
+        oad_label.place(x=90, y=220)
+        atp_label = tk.Label(self.window_config, text="Activar analisis de la postura corporal")
+        atp_label.place(x=140, y=260)
         rg_label = tk.Label(self.window_config, text="Generar informe")
-        rg_label.place(x=190, y=380)
+        rg_label.place(x=190, y=320)
 
-        self.dni = tk.StringVar()
-        self.username = tk.StringVar()
+
         options = tk.StringVar()
         self.var = tk.StringVar()
         self.var.set('Caminar')
         options = ['Secarse el pelo', 'Lavarse los dientes', 'Teclear', 'Pasear con el perro', 'Mezclar',
                  'Escribir en la pizarra', 'Gatear', 'Nadar', 'Soplar las velas', 'Saltar en trampolín',
                  'Montar en bicicleta', 'Caminar']
+
+        options1 = tk.StringVar()
+        self.users = tk.StringVar()
+        self.users.set('UDC_0036')
+        options1 = ['UDC_0036', 'UDC_6523', 'UDC_6569', 'UDC_6263']
+
         self.var1 = tk.IntVar()
         self.var2 = tk.IntVar()
         self.var3 = tk.IntVar()
-        self.var4 = tk.IntVar()
-        self.var5 = tk.IntVar()
-        self.var6 = tk.IntVar()
 
-        self.dni_entry = tk.Entry(self.window_config, textvariable=self.dni, width="10")
-        self.username_entry = tk.Entry(self.window_config, textvariable=self.username, width="30")
+        self.users = tk.OptionMenu(self.window_config, self.users, *options1)
+        self.users.config(width="35")
+        self.users.place(x=22, y=220)
+
         self.action = tk.OptionMenu(self.window_config, self.var, *options)
         self.action.config(width="40")
+        self.action.place(x=22, y=190)
 
-        self.action.place(x=22, y=220)
-        self.dni_entry.place(x=22, y=100)
-        self.username_entry.place(x=22, y=160)
 
         c1 = tk.Checkbutton(self.window_config, text='SI', variable=self.var1, onvalue=1, offvalue=0).place(x=220, y=290)
-        c2 = tk.Checkbutton(self.window_config, text='SI', variable=self.var3, onvalue=1, offvalue=0).place(x=220, y=350)
-        c3 = tk.Checkbutton(self.window_config, text='SI', variable=self.var5, onvalue=1, offvalue=0).place(x=220, y=410)
+        c2 = tk.Checkbutton(self.window_config, text='SI', variable=self.var2, onvalue=1, offvalue=0).place(x=220, y=350)
+        c3 = tk.Checkbutton(self.window_config, text='SI', variable=self.var3, onvalue=1, offvalue=0).place(x=220, y=370)
 
+        if self.var1==1:
+            print("Hello world")
+        else:
+            print("Do nothing")
 
-        submit_btn = tk.Button(self.window_config, text="Guardar", command=self.send_data, width="25", height="2")
-        submit_btn.place(x=150, y=445)
+        if self.var2==1:
+            print("Hello world")
+        else:
+            print("Do nothing")
+
+        if self.var3==1:
+            print("Hello world")
+        else:
+            print("Do nothing")
+
+        submit_btn = tk.Button(self.window_config, text="Guardar", command=json.dumps(json), width="25", height="2")
+        submit_btn.place(x=150, y=400)
 
         self.window_config.mainloop()
 
@@ -111,7 +127,7 @@ class App(tk.Tk):
         # VLC player object
         # TODO: select from the dataset of activities
         video_name = "data/Video/Lavarlosdientes.mp4"
-        self.player = Player(self.window_oaa, title='LOLA - Monitorizacion de acciones',  video=video_name)
+        self.player = Player(self.window_oaa, title='LOLA - Monitorizacion de acciones', video=video_name)
         self.window_oaa.protocol(("WM_DELETE_WINDOW", self.player.OnClose))
 
     def on_monitorization(self):
