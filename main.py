@@ -5,14 +5,18 @@ import vlc
 from tkvlc import Player
 import json
 
+
 class App(tk.Tk):
     """
     Main dialog (root window)
     """
+
     def __init__(self):
         super().__init__()
 
         self.title('Bienvenidos a LOLA')
+        self.path = "config/config.json"
+        self.config_data = None
 
         # Create background image
         lbl = ImageLabel(self)
@@ -26,6 +30,47 @@ class App(tk.Tk):
         tk.Button(self,
                   text='Configuración',
                   command=self.open_configuration).pack()
+
+    @staticmethod
+    def __open_file(path):
+        """
+        Function to open the file
+        :return: serialized data from json
+        """
+
+        # Read file
+        f = open(path)
+        config_data = json.load(f)
+        f.close()
+
+        return config_data
+
+    def __close_file(self):
+        """
+        Function to close the file
+        """
+
+        # Serialize json
+        json_serialized = json.dumps(self.config_data)
+
+        # Writing to config_new.json
+        with open(self.path, "w") as outfile:
+            outfile.write(json_serialized)
+
+    def __save_data_option(self, _):
+        """
+        Function to save option menu the data to a dict
+        """
+        self.config_data["last_id"] = self.last_id.get()
+        self.config_data["users_info"][self.last_id.get()]["last_action"] = self.last_action.get()
+
+    def __save_data_check(self):
+        """
+        Function to save the check button data to a dict
+        """
+        self.config_data["users_info"][self.last_id.get()]["last_oaa"] = self.last_online_action_detection.get()
+        self.config_data["users_info"][self.last_id.get()]["last_pe"] = self.last_pose_estimation.get()
+        self.config_data["users_info"][self.last_id.get()]["last_rg"] = self.last_report_generation.get()
 
     def open_action_analysis(self):
         """
@@ -47,78 +92,77 @@ class App(tk.Tk):
         self.window_oaa.mainloop()
 
     def open_configuration(self):
-        x = 'json'
-        y = json.loads(x)
+        # Open file
+        
+        self.config_data = self.__open_file(self.path)
+
         """
         function to create Dialog for action analysis window
         """
-        self.window_config = tk.Toplevel(self.master)
-        self.window_config.grab_set()
-        self.window_config.geometry("500x500")
-        self.window_config.title('LOLA - Configuración del dispositivo')
+        window_config = tk.Toplevel(self.master)
+        window_config.grab_set()
+        window_config.geometry("500x500")
+        window_config.title('LOLA - Configuración del dispositivo')
 
         # Prepare buttons for the dialog
-        conf_label = tk.Label(self.window_config, text="Configuración").place(x=210, y=30)
-        dni_label = tk.Label(self.window_config, text="Usuario")
-        dni_label.place(x=22, y=70)
-        action_label = tk.Label(self.window_config, text="Acciones")
-        action_label.place(x=22, y=130)
-        oad_label = tk.Label(self.window_config, text="Activar detección de acciones en tiempo real")
-        oad_label.place(x=90, y=220)
-        atp_label = tk.Label(self.window_config, text="Activar analisis de la postura corporal")
-        atp_label.place(x=140, y=260)
-        rg_label = tk.Label(self.window_config, text="Generar informe")
-        rg_label.place(x=190, y=320)
+        conf_label = tk.Label(window_config, text="Configuración").place(x=210, y=30)
+        dni_label = tk.Label(window_config, text="Usuario").place(x=22, y=70)
+        action_label = tk.Label(window_config, text="Acciones").place(x=22, y=130)
+        oad_label = tk.Label(window_config, text="Activar detección de acciones en tiempo real").place(x=90, y=200)
+        atp_label = tk.Label(window_config, text="Activar analisis de la postura corporal").place(x=110, y=260)
+        rg_label = tk.Label(window_config, text="Generar informe").place(x=190, y=320)
 
+        self.last_id = tk.StringVar()
+        self.last_id.set(self.config_data['last_id'])
+        options1 = [*self.config_data["users_info"]]
 
-        options = tk.StringVar()
-        self.var = tk.StringVar()
-        self.var.set('Caminar')
-        options = ['Secarse el pelo', 'Lavarse los dientes', 'Teclear', 'Pasear con el perro', 'Mezclar',
-                 'Escribir en la pizarra', 'Gatear', 'Nadar', 'Soplar las velas', 'Saltar en trampolín',
-                 'Montar en bicicleta', 'Caminar']
+        self.last_action = tk.StringVar()
+        self.last_action.set(self.config_data['users_info'][self.last_id.get()]['last_action'])
+        options = self.config_data['actions']
 
-        options1 = tk.StringVar()
-        self.users = tk.StringVar()
-        self.users.set('UDC_0036')
-        options1 = ['UDC_0036', 'UDC_6523', 'UDC_6569', 'UDC_6263']
+        self.last_online_action_detection = tk.BooleanVar()
+        self.last_online_action_detection.set(self.config_data['users_info'][self.last_id.get()]['last_oaa'])
 
-        self.var1 = tk.IntVar()
-        self.var2 = tk.IntVar()
-        self.var3 = tk.IntVar()
+        self.last_pose_estimation = tk.BooleanVar()
+        self.last_pose_estimation.set(self.config_data['users_info'][self.last_id.get()]['last_pe'])
 
-        self.users = tk.OptionMenu(self.window_config, self.users, *options1)
-        self.users.config(width="35")
-        self.users.place(x=22, y=220)
+        self.last_report_generation = tk.BooleanVar()
+        self.last_report_generation.set(self.config_data['users_info'][self.last_id.get()]['last_rg'])
 
-        self.action = tk.OptionMenu(self.window_config, self.var, *options)
-        self.action.config(width="40")
-        self.action.place(x=22, y=190)
+        id = tk.OptionMenu(window_config, self.last_id, *options1, command=self.__save_data_option)
+        id.config(width="35")
+        id.place(x=22, y=90)
 
+        action = tk.OptionMenu(window_config, self.last_action, *options, command=self.__save_data_option)
+        action.config(width="40")
+        action.place(x=22, y=150)
 
-        c1 = tk.Checkbutton(self.window_config, text='SI', variable=self.var1, onvalue=1, offvalue=0).place(x=220, y=290)
-        c2 = tk.Checkbutton(self.window_config, text='SI', variable=self.var2, onvalue=1, offvalue=0).place(x=220, y=350)
-        c3 = tk.Checkbutton(self.window_config, text='SI', variable=self.var3, onvalue=1, offvalue=0).place(x=220, y=370)
+        button_oaa = tk.Checkbutton(window_config,
+                                    text='SI',
+                                    variable=self.last_online_action_detection,
+                                    onvalue=True,
+                                    offvalue=False,
+                                    command=self.__save_data_check).place(x=220, y=230)
+        button_pe = tk.Checkbutton(window_config,
+                                   text='SI',
+                                   variable=self.last_pose_estimation,
+                                   onvalue=True,
+                                   offvalue=False,
+                                   command=self.__save_data_check).place(x=220, y=290)
+        button_rg = tk.Checkbutton(window_config,
+                                   text='SI',
+                                   variable=self.last_report_generation,
+                                   onvalue=True,
+                                   offvalue=False,
+                                   command=self.__save_data_check).place(x=220, y=350)
 
-        if self.var1==1:
-            print("Hello world")
-        else:
-            print("Do nothing")
+        submit_btn = tk.Button(window_config, text="Guardar", width="25", height="2", command=self.__close_file).place(
+            x=150, y=400)
 
-        if self.var2==1:
-            print("Hello world")
-        else:
-            print("Do nothing")
+        exit_button = tk.Button(window_config, text="Salir", width="25", height="2", command=lambda: window_config.destroy()).place(
+            x=150, y=450)
 
-        if self.var3==1:
-            print("Hello world")
-        else:
-            print("Do nothing")
-
-        submit_btn = tk.Button(self.window_config, text="Guardar", command=json.dumps(json), width="25", height="2")
-        submit_btn.place(x=150, y=400)
-
-        self.window_config.mainloop()
+        window_config.mainloop()
 
     def on_activity(self):
         """
@@ -129,10 +173,6 @@ class App(tk.Tk):
         video_name = "data/Video/Lavarlosdientes.mp4"
         self.player = Player(self.window_oaa, title='LOLA - Monitorizacion de acciones', video=video_name)
         self.window_oaa.protocol(("WM_DELETE_WINDOW", self.player.OnClose))
-
-    def on_monitorization(self):
-        print('patata')
-
 
     def send_data(self):
         dni_data = self.dni.get()
