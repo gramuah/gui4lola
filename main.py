@@ -1,9 +1,11 @@
 # GUI FOR LOLA PLATFORM
-import tkinter as tk
-from utilities import ImageLabel
-import vlc
-from tkvlc import Player
 import json
+import os
+import random
+import tkinter as tk
+
+from tkvlc import Player
+from utilities import ImageLabel
 
 
 class App(tk.Tk):
@@ -15,6 +17,7 @@ class App(tk.Tk):
         super().__init__()
 
         self.title('Bienvenidos a LOLA')
+        # self.wm_iconbitmap("/home/ivanf/proyects/gui4lola/data/Image/robot.ico")
         self.path = "config/config.json"
         self.config_data = None
 
@@ -164,30 +167,41 @@ class App(tk.Tk):
 
         window_config.mainloop()
 
+    def open_window_save(self):
+        """
+
+        :return:
+        """
+        window_config_save = tk.Toplevel(self.master)
+        window_config_save.grab_set()
+        window_config_save.geometry("500x500")
+        window_config_save.title('Guardado')
+
+        self.window_config_save.mainloop()
+
     def on_activity(self):
         """
         Creates a frame to display VLC Media player
         """
+        # Load data
+        if self.config_data:
+            pass
+        else:
+            self.config_data = self.__open_file(self.path)
+        last_id = self.config_data['last_id']
+        video_dir = "data/Video/" + self.config_data['users_info'][last_id]['last_action']
+        video_name = random.choice(os.listdir(video_dir))
+        video_path = os.path.join(video_dir, video_name)
         # VLC player object
-        # TODO: select from the dataset of activities
-        video_name = "data/Video/Lavarlosdientes.mp4"
-        self.player = Player(self.window_oaa, title='LOLA - Monitorizacion de acciones', video=video_name)
+        self.player = Player(self.window_oaa, title='LOLA - Monitorizacion de acciones', video=video_path)
         self.window_oaa.protocol(("WM_DELETE_WINDOW", self.player.OnClose))
 
-    def send_data(self):
-        dni_data = self.dni.get()
-        username_data = self.username.get()
-        newfile = open("registration.txt", "a")
-        newfile.write(dni_data)
-        newfile.write("\t")
-        newfile.write(username_data)
-        newfile.write("\t")
-        newfile.write("\n")
-        newfile.close()
-
-        self.dni_entry.delete(0, tk.END)
-        self.username_entry.delete(0, tk.END)
-
+    def on_monitorization(self):
+        """
+        Placeholder for the monitorization activity
+        :return: NotImplemented
+        """
+        return NotImplemented
 
 if __name__ == "__main__":
     # Run main dialog
