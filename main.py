@@ -18,6 +18,7 @@ class App(tk.Tk):
 
         self.title('Bienvenidos a LOLA')
         # self.wm_iconbitmap("/home/ivanf/proyects/gui4lola/data/Image/robot.ico")
+        self.attributes("-fullscreen", True)
         self.path = "config/config.json"
         self.config_data = None
 
@@ -33,6 +34,9 @@ class App(tk.Tk):
         tk.Button(self,
                   text='Configuración',
                   command=self.open_configuration).pack()
+        tk.Button(self,
+                  text="Salir",
+                  command=lambda: self.destroy()).pack()
 
     @staticmethod
     def __open_file(path):
@@ -81,6 +85,7 @@ class App(tk.Tk):
         """
         self.window_oaa = tk.Toplevel(self.master)
         self.window_oaa.grab_set()
+        self.window_oaa.attributes("-fullscreen", True)
         self.window_oaa.title('LOLA - Monitorizacion de acciones')
         # Prepare buttons for the dialog
         # Button to start activity (with video visualization)
@@ -92,6 +97,11 @@ class App(tk.Tk):
         tk.Button(self.window_oaa,
                   text='Comenzar Monitorización',
                   command=self.on_monitorization).pack()
+
+        # Button to exit
+        tk.Button(self.window_oaa,
+                  text="Salir",
+                  command=lambda: self.window_oaa.destroy()).pack()
         self.window_oaa.mainloop()
 
     def open_configuration(self):
@@ -104,7 +114,7 @@ class App(tk.Tk):
         """
         window_config = tk.Toplevel(self.master)
         window_config.grab_set()
-        window_config.geometry("500x500")
+        window_config.attributes("-fullscreen", True)
         window_config.title('LOLA - Configuración del dispositivo')
 
         # Prepare buttons for the dialog
@@ -166,18 +176,6 @@ class App(tk.Tk):
             x=150, y=450)
 
         window_config.mainloop()
-
-    def open_window_save(self):
-        """
-
-        :return:
-        """
-        window_config_save = tk.Toplevel(self.master)
-        window_config_save.grab_set()
-        window_config_save.geometry("500x500")
-        window_config_save.title('Guardado')
-
-        self.window_config_save.mainloop()
 
     def on_activity(self):
         """
