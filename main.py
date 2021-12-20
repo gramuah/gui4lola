@@ -24,19 +24,19 @@ class App(tk.Tk):
 
         # Create background image
         lbl = ImageLabel(self)
-        lbl.pack()
-        lbl.load('data/Gift/robot.gif')
+        lbl.place(x=270, y=35)
+        lbl.load('data/Gif/robot.gif')
 
         # place a button on the root window for action analysis window
         tk.Button(self,
                   text='Comenzar',
-                  command=self.open_action_analysis).pack()
+                  command=self.open_action_analysis, width="30", height="5").place(x=80, y=450)
         tk.Button(self,
                   text='Configuración',
-                  command=self.open_configuration).pack()
+                  command=self.open_configuration,width="30", height="5").place(x=380, y=450)
         tk.Button(self,
                   text="Salir",
-                  command=lambda: self.destroy()).pack()
+                  command=lambda: self.destroy(), width="30", height="5").place(x=680, y=450)
 
     @staticmethod
     def __open_file(path):
@@ -91,17 +91,17 @@ class App(tk.Tk):
         # Button to start activity (with video visualization)
         tk.Button(self.window_oaa,
                   text='Comenzar Actividad',
-                  command=self.on_activity).pack()
+                  command=self.on_activity, width="30", height="6").place(x=400, y=100)
 
         # Button to start monitorization
         tk.Button(self.window_oaa,
                   text='Comenzar Monitorización',
-                  command=self.on_monitorization).pack()
+                  command=self.on_monitorization, width="30", height="6").place(x=400, y=250)
 
         # Button to exit
         tk.Button(self.window_oaa,
                   text="Salir",
-                  command=lambda: self.window_oaa.destroy()).pack()
+                  command=lambda: self.window_oaa.destroy(), width="30", height="6").place(x=400, y=400)
         self.window_oaa.mainloop()
 
     def open_configuration(self):
@@ -118,12 +118,12 @@ class App(tk.Tk):
         window_config.title('LOLA - Configuración del dispositivo')
 
         # Prepare buttons for the dialog
-        conf_label = tk.Label(window_config, text="Configuración").place(x=210, y=30)
+        conf_label = tk.Label(window_config, text="Configuración").place(x=460, y=30)
         dni_label = tk.Label(window_config, text="Usuario").place(x=22, y=70)
-        action_label = tk.Label(window_config, text="Acciones").place(x=22, y=130)
-        oad_label = tk.Label(window_config, text="Activar detección de acciones en tiempo real").place(x=90, y=200)
-        atp_label = tk.Label(window_config, text="Activar analisis de la postura corporal").place(x=110, y=260)
-        rg_label = tk.Label(window_config, text="Generar informe").place(x=190, y=320)
+        action_label = tk.Label(window_config, text="Acciones").place(x=675, y=70)
+        oad_label = tk.Label(window_config, text="Activar detección de acciones en tiempo real").place(x=365, y=160)
+        atp_label = tk.Label(window_config, text="Activar analisis de la postura corporal").place(x=390, y=240)
+        rg_label = tk.Label(window_config, text="Generar informe").place(x=465, y=320)
 
         self.last_id = tk.StringVar()
         self.last_id.set(self.config_data['last_id'])
@@ -143,37 +143,36 @@ class App(tk.Tk):
         self.last_report_generation.set(self.config_data['users_info'][self.last_id.get()]['last_rg'])
 
         id = tk.OptionMenu(window_config, self.last_id, *options1, command=self.__save_data_option)
-        id.config(width="35")
+        id.config(width="35", height="2")
         id.place(x=22, y=90)
 
         action = tk.OptionMenu(window_config, self.last_action, *options, command=self.__save_data_option)
-        action.config(width="40")
-        action.place(x=22, y=150)
+        action.config(width="35", height="2")
+        action.place(x=675, y=90)
 
         button_oaa = tk.Checkbutton(window_config,
                                     text='SI',
                                     variable=self.last_online_action_detection,
                                     onvalue=True,
                                     offvalue=False,
-                                    command=self.__save_data_check).place(x=220, y=230)
+                                    command=self.__save_data_check, width="10", height="3").place(x=470, y=180)
         button_pe = tk.Checkbutton(window_config,
                                    text='SI',
                                    variable=self.last_pose_estimation,
                                    onvalue=True,
                                    offvalue=False,
-                                   command=self.__save_data_check).place(x=220, y=290)
+                                   command=self.__save_data_check, width="10", height="3").place(x=470, y=260)
         button_rg = tk.Checkbutton(window_config,
                                    text='SI',
                                    variable=self.last_report_generation,
                                    onvalue=True,
                                    offvalue=False,
-                                   command=self.__save_data_check).place(x=220, y=350)
+                                   command=self.__save_data_check, width="10", height="3").place(x=470, y=340)
 
-        submit_btn = tk.Button(window_config, text="Guardar", width="25", height="2", command=self.__close_file).place(
-            x=150, y=400)
+        submit_btn = tk.Button(window_config, text="Guardar", width="30", height="3", command=self.__close_file).place(
+            x=380, y=425)
 
-        exit_button = tk.Button(window_config, text="Salir", width="25", height="2", command=lambda: window_config.destroy()).place(
-            x=150, y=450)
+        exit_button = tk.Button(window_config, text="Salir", width="30", height="3", command=lambda: window_config.destroy()).place(x=380, y=500)
 
         window_config.mainloop()
 
