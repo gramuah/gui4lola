@@ -3,6 +3,7 @@ import json
 import os
 import random
 import tkinter as tk
+import tkinter.font as font
 
 from tkvlc import Player
 from utilities import ImageLabel
@@ -21,7 +22,10 @@ class App(tk.Tk):
         self.attributes("-fullscreen", True)
         self.path = "config/config.json"
         self.config_data = None
-
+        ### ESTO TE VA A PRINTEAR EN LA CONSOLA LAS POSIBLES FUENTES QUE TIENES DISPONIBLES, PARA QUE USES LA QUE QUIERAS
+        print(font.families())
+        ### AQUÍ DEFINES LAS FUENTES QUE QUIERES USAR POR DEFECTO, Y LUEGO LO INTRODUCES EN EL ARGUMENTO DEL BOTÓN
+        self.default_font = font.Font(name='Ubuntu Mono', size=25)
         # Create background image
         lbl = ImageLabel(self)
         lbl.place(x=270, y=35)
@@ -30,10 +34,10 @@ class App(tk.Tk):
         # place a button on the root window for action analysis window
         tk.Button(self,
                   text='Comenzar',
-                  command=self.open_action_analysis, width="30", height="5").place(x=80, y=450)
+                  command=self.open_action_analysis, font=self.default_font).place(x=80, y=450)
         tk.Button(self,
                   text='Configuración',
-                  command=self.open_configuration,width="30", height="5").place(x=380, y=450)
+                  command=self.open_configuration, font=self.default_font).place(x=380, y=450)
         tk.Button(self,
                   text="Salir",
                   command=lambda: self.destroy(), width="30", height="5").place(x=680, y=450)
@@ -118,7 +122,7 @@ class App(tk.Tk):
         window_config.title('LOLA - Configuración del dispositivo')
 
         # Prepare buttons for the dialog
-        conf_label = tk.Label(window_config, text="Configuración").place(x=460, y=30)
+        conf_label = tk.Label(window_config, text="Configuración", font=("", 55)).place(x=460, y=30)
         dni_label = tk.Label(window_config, text="Usuario").place(x=22, y=70)
         action_label = tk.Label(window_config, text="Acciones").place(x=675, y=70)
         oad_label = tk.Label(window_config, text="Activar detección de acciones en tiempo real").place(x=365, y=160)
