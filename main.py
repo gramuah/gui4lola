@@ -22,10 +22,8 @@ class App(tk.Tk):
         self.attributes("-fullscreen", True)
         self.path = "config/config.json"
         self.config_data = None
-        ### ESTO TE VA A PRINTEAR EN LA CONSOLA LAS POSIBLES FUENTES QUE TIENES DISPONIBLES, PARA QUE USES LA QUE QUIERAS
-        print(font.families())
-        ### AQUÍ DEFINES LAS FUENTES QUE QUIERES USAR POR DEFECTO, Y LUEGO LO INTRODUCES EN EL ARGUMENTO DEL BOTÓN
-        self.default_font = font.Font(name='Ubuntu Mono', size=25)
+
+        self.default_font = font.Font(name='Helvetica', size=30)
         # Create background image
         lbl = ImageLabel(self)
         lbl.place(x=270, y=35)
@@ -34,13 +32,13 @@ class App(tk.Tk):
         # place a button on the root window for action analysis window
         tk.Button(self,
                   text='Comenzar',
-                  command=self.open_action_analysis, font=self.default_font).place(x=80, y=450)
+                  command=self.open_action_analysis, font=self.default_font,  width="10", height="2").place(x=25, y=460)
         tk.Button(self,
                   text='Configuración',
-                  command=self.open_configuration, font=self.default_font).place(x=380, y=450)
+                  command=self.open_configuration, font=self.default_font,  width="12", height="2").place(x=350, y=460)
         tk.Button(self,
-                  text="Salir",
-                  command=lambda: self.destroy(), width="30", height="5").place(x=680, y=450)
+                  text="Salir", font=self.default_font,  width="10", height="2",
+                  command=lambda: self.destroy()).place(x=720, y=460)
 
     @staticmethod
     def __open_file(path):
@@ -94,18 +92,18 @@ class App(tk.Tk):
         # Prepare buttons for the dialog
         # Button to start activity (with video visualization)
         tk.Button(self.window_oaa,
-                  text='Comenzar Actividad',
-                  command=self.on_activity, width="30", height="6").place(x=400, y=100)
+                  text='Comenzar Actividad', font=("Helvetica", 25),
+                  command=self.on_activity, width="25", height="3").place(x=260, y=100)
 
         # Button to start monitorization
         tk.Button(self.window_oaa,
-                  text='Comenzar Monitorización',
-                  command=self.on_monitorization, width="30", height="6").place(x=400, y=250)
+                  text='Comenzar Monitorización', font=("Helvetica", 25),
+                  command=self.on_monitorization, width="25", height="3").place(x=260, y=250)
 
         # Button to exit
         tk.Button(self.window_oaa,
-                  text="Salir",
-                  command=lambda: self.window_oaa.destroy(), width="30", height="6").place(x=400, y=400)
+                  text="Salir", font=("Helvetica", 25),
+                  command=lambda: self.window_oaa.destroy(), width="25", height="3").place(x=260, y=400)
         self.window_oaa.mainloop()
 
     def open_configuration(self):
@@ -122,12 +120,12 @@ class App(tk.Tk):
         window_config.title('LOLA - Configuración del dispositivo')
 
         # Prepare buttons for the dialog
-        conf_label = tk.Label(window_config, text="Configuración", font=("", 55)).place(x=460, y=30)
-        dni_label = tk.Label(window_config, text="Usuario").place(x=22, y=70)
-        action_label = tk.Label(window_config, text="Acciones").place(x=675, y=70)
-        oad_label = tk.Label(window_config, text="Activar detección de acciones en tiempo real").place(x=365, y=160)
-        atp_label = tk.Label(window_config, text="Activar analisis de la postura corporal").place(x=390, y=240)
-        rg_label = tk.Label(window_config, text="Generar informe").place(x=465, y=320)
+        conf_label = tk.Label(window_config, text="Configuración", font=("Helvetica", 30)).place(x=390, y=30)
+        dni_label = tk.Label(window_config, text="Usuario", font=("Helvetica", 20)).place(x=22, y=95)
+        action_label = tk.Label(window_config, text="Acciones",font=("Helvetica", 20)).place(x=675, y=95)
+        oad_label = tk.Label(window_config, text="Activar detección de acciones en tiempo real",font=("Helvetica", 20)).place(x=250, y=230)
+        atp_label = tk.Label(window_config, text="Activar analisis de la postura corporal", font=("Helvetica", 20)).place(x=300, y=330)
+        rg_label = tk.Label(window_config, text="Generar informe", font=("Helvetica", 20)).place(x=425, y=430)
 
         self.last_id = tk.StringVar()
         self.last_id.set(self.config_data['last_id'])
@@ -146,37 +144,37 @@ class App(tk.Tk):
         self.last_report_generation = tk.BooleanVar()
         self.last_report_generation.set(self.config_data['users_info'][self.last_id.get()]['last_rg'])
 
-        id = tk.OptionMenu(window_config, self.last_id, *options1, command=self.__save_data_option)
-        id.config(width="35", height="2")
-        id.place(x=22, y=90)
+        id = tk.OptionMenu(window_config, self.last_id, *options1, command=self.__save_data_option,)
+        id.config(width="25", height="2", font=("Helvetica", 15))
+        id.place(x=22, y=130)
 
         action = tk.OptionMenu(window_config, self.last_action, *options, command=self.__save_data_option)
-        action.config(width="35", height="2")
-        action.place(x=675, y=90)
+        action.config(width="25", height="2", font=("Helvetica", 15))
+        action.place(x=675, y=130)
 
         button_oaa = tk.Checkbutton(window_config,
-                                    text='SI',
+                                    text='SI', font=("Helvetica", 12),
                                     variable=self.last_online_action_detection,
                                     onvalue=True,
                                     offvalue=False,
-                                    command=self.__save_data_check, width="10", height="3").place(x=470, y=180)
+                                    command=self.__save_data_check, width="10", height="3").place(x=470, y=270)
         button_pe = tk.Checkbutton(window_config,
-                                   text='SI',
+                                   text='SI', font=("Helvetica", 12),
                                    variable=self.last_pose_estimation,
                                    onvalue=True,
                                    offvalue=False,
-                                   command=self.__save_data_check, width="10", height="3").place(x=470, y=260)
+                                   command=self.__save_data_check, width="10", height="3").place(x=470, y=370)
         button_rg = tk.Checkbutton(window_config,
-                                   text='SI',
+                                   text='SI', font=("Helvetica", 12),
                                    variable=self.last_report_generation,
                                    onvalue=True,
                                    offvalue=False,
-                                   command=self.__save_data_check, width="10", height="3").place(x=470, y=340)
+                                   command=self.__save_data_check, width="10", height="3").place(x=470, y=470)
 
-        submit_btn = tk.Button(window_config, text="Guardar", width="30", height="3", command=self.__close_file).place(
-            x=380, y=425)
+        submit_btn = tk.Button(window_config, text="Guardar", font=("Helvetica", 20), command=self.__close_file, width="15", height="2").place(
+            x=50, y=500)
 
-        exit_button = tk.Button(window_config, text="Salir", width="30", height="3", command=lambda: window_config.destroy()).place(x=380, y=500)
+        exit_button = tk.Button(window_config, text="Salir", font=("Helvetica", 20), command=lambda: window_config.destroy(), width="15", height="2").place(x=725, y=500)
 
         window_config.mainloop()
 
