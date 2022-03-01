@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Exec=~/gui4lola/launch.sh
+Name=SSH Server
+GenericName=SSH Server
+Comment=Connect to My Server
+Encoding=UTF-8
+Terminal=true
+Type=Application
+Categories=Application;Network;
