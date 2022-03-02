@@ -4,6 +4,8 @@ import os
 import random
 import tkinter as tk
 import tkinter.font as font
+import subprocess
+import sys
 
 from tkvlc import Player
 from utilities import ImageLabel
@@ -39,6 +41,10 @@ class App(tk.Tk):
         tk.Button(self,
                   text="Salir", font=self.default_font,  width="10", height="2",
                   command=lambda: self.destroy()).place(x=720, y=460)
+
+        # Run ROS subprocesses
+        subprocess.run(['roslaunch', 'lola2_global', 'basic_lola.launch'])
+        subprocess.run(['roslaunch', 'logitech_f710_joy_ros', 'joy_teleop.launch'])
 
     @staticmethod
     def __open_file(path):
