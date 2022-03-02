@@ -228,11 +228,11 @@ class App(tk.Tk):
 if __name__ == "__main__":
     # Create main dialog
     app = App()
-    # Create pool
-    pool = Pool(processes=3)
-    # Run ROS subprocesses
-    subprocess.Popen(['roslaunch', 'lola2_global', 'basic_lola.launch'])
-    subprocess.Popen(['roslaunch', 'logitech_f710_joy_ros', 'joy_teleop.launch'])
+    # # Create pool
+    # pool = Pool(processes=3)
+    # # Run ROS subprocesses
+    # subprocess.Popen(['roslaunch', 'lola2_global', 'basic_lola.launch'])
+    # subprocess.Popen(['roslaunch', 'logitech_f710_joy_ros', 'joy_teleop.launch'])
     # Run app subprocess
-    # pool.apply_async(app.mainloop())
+    app.mainloop()
 
