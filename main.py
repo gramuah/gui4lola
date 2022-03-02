@@ -6,7 +6,7 @@ import tkinter as tk
 import tkinter.font as font
 import subprocess
 import sys
-
+from multiprocessing import Pool
 from tkvlc import Player
 from utilities import ImageLabel
 
@@ -41,10 +41,6 @@ class App(tk.Tk):
         tk.Button(self,
                   text="Salir", font=self.default_font,  width="10", height="2",
                   command=lambda: self.destroy()).place(x=720, y=460)
-
-        # Run ROS subprocesses
-        subprocess.run(['roslaunch', 'lola2_global', 'basic_lola.launch'])
-        subprocess.run(['roslaunch', 'logitech_f710_joy_ros', 'joy_teleop.launch'])
 
     @staticmethod
     def __open_file(path):
@@ -230,6 +226,13 @@ class App(tk.Tk):
  
 
 if __name__ == "__main__":
-    # Run main dialog
+    # Create main dialog
     app = App()
-    app.mainloop()
+    # Create pool
+    pool = Pool(processes=3)
+    # Run ROS subprocesses
+    pool.apply_async(subprocess.run(['roslaunch', 'lola2_global', 'basic_lola.launch']))
+    pool.apply_async(subprocess.run(['roslaunch', 'logitech_f710_joy_ros', 'joy_teleop.launch']))
+    # Run app subprocess
+    pool.apply_async(app.mainloop())
+
