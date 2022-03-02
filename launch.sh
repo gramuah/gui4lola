@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python3 ~/gui4lola/main.py
+python3 home/rober/gui4lola/main.py

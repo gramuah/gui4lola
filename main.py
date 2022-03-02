@@ -4,9 +4,6 @@ import os
 import random
 import tkinter as tk
 import tkinter.font as font
-import subprocess
-import sys
-from multiprocessing import Pool
 from tkvlc import Player
 from utilities import ImageLabel
 
@@ -203,11 +200,7 @@ class App(tk.Tk):
         self.window_oaa.protocol(("WM_DELETE_WINDOW", self.player.OnClose))
 
     def on_monitorization(self):
-        import os
-        #import subprocess
-        #window_video = tk.Toplevel(self.master)
-        #window_video.grab_set()
-        #window_video.attributes("-fullscreen", True)
+
         self.config_data = self.__open_file(self.path)
         last_id = self.config_data['last_id']
         User_ID = str(last_id)
@@ -228,11 +221,6 @@ class App(tk.Tk):
 if __name__ == "__main__":
     # Create main dialog
     app = App()
-    # # Create pool
-    # pool = Pool(processes=3)
-    # # Run ROS subprocesses
-    # subprocess.Popen(['roslaunch', 'lola2_global', 'basic_lola.launch'])
-    # subprocess.Popen(['roslaunch', 'logitech_f710_joy_ros', 'joy_teleop.launch'])
-    # Run app subprocess
+    # Run app
     app.mainloop()
 
