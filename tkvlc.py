@@ -153,7 +153,7 @@ class Player(Tk.Frame):
 
     def _Pause_Play(self, playing):
         # re-label menu item and button, adjust callbacks
-        p = 'Pause' if playing else 'Play'
+        p = 'Pausar' if playing else 'Play'
         c = self.OnPlay if playing is None else self.OnPause
         self.fileMenu.entryconfig(self.playIndex, label=p, command=c)
         # self.fileMenu.bind_shortcut('p', c)  # XXX handled
