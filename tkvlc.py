@@ -130,8 +130,11 @@ class Player(Tk.Frame):
     def OnClose(self, *unused):
         """Closes the window and quit.
         """
-        print("LOLA says bye!")
+        #print("LOLA says bye!")
+        #self._stopped = True
+        
         self.OnStop()
+        self.parent.destroy()
 
     def OnConfigure(self, *unused):
         """Some widget configuration changed.
