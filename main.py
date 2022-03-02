@@ -231,8 +231,8 @@ if __name__ == "__main__":
     # Create pool
     pool = Pool(processes=3)
     # Run ROS subprocesses
-    pool.apply_async(subprocess.run(['roslaunch', 'lola2_global', 'basic_lola.launch']))
-    pool.apply_async(subprocess.run(['roslaunch', 'logitech_f710_joy_ros', 'joy_teleop.launch']))
+    pool.apply_async(subprocess.Popen(['roslaunch', 'lola2_global', 'basic_lola.launch']))
+    pool.apply_async(subprocess.Popen(['roslaunch', 'logitech_f710_joy_ros', 'joy_teleop.launch']))
     # Run app subprocess
     pool.apply_async(app.mainloop())
 
