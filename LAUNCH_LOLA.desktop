@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+Terminal=false
+Exec=~/repositorios/gui4lola/launch.sh
+Name=Name of Application
+Icon=/path/to/icon
