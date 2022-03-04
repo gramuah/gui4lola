@@ -100,6 +100,8 @@ class Player(Tk.Frame):
         fileMenu.add_command(label="Silenciar", command=self.OnMute)
         fileMenu.add_separator()
         fileMenu.add_command(label="Cerrar", command=self.OnClose)
+        menu3 = menubar.nametowidget(fileMenu.menuname)
+        menu3.config(font=("Helvetica", 15))
         menubar.add_cascade(label="Controles", menu=fileMenu)
 
         self.fileMenu = fileMenu
