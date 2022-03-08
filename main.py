@@ -204,13 +204,17 @@ class App(tk.Tk):
         self.config_data = self.__open_file(self.path)
         last_id = self.config_data['last_id']
         User_ID = str(last_id)
-        
-        #print(self.last_report_generation.get())
+        last_action = (self.config_data['users_info'][last_id]['last_action'])
+        last_act = str(last_action)
+        Req_act = last_act.replace(' ' , '_')
+        act = str(User_ID + ',' + Req_act)
+        #print (act)
 
         try:
             self.last_report_generation.get()
    
-            os.system('~/miniconda3/envs/torch55/bin/python ~/gui4lola/OAD/action-recognition/source/action_recognition_Log.py  --user-id ' + User_ID)
+            #os.system('~/miniconda3/envs/torch55/bin/python ~/gui4lola/OAD/action-recognition/source/action_recognition_Log.py   --user-id '   + User_ID)
+            os.system('~/miniconda3/envs/torch55/bin/python ~/gui4lola/OAD/action-recognition/source/action_recognition_Log.py  --info_id_act '  + act)
 
         except:
 

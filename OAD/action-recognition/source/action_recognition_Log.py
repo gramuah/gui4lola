@@ -14,9 +14,12 @@ for i in removing_files:
     os.remove(i)
 '''
 parser = argparse.ArgumentParser()
-parser.add_argument('--user-id', type=str, help='The id for the current user.')
+parser.add_argument('--info_id_act', type=str, help='The info for the current user.')
 args = parser.parse_args()
-name_of_User = vars(args)['user_id']
+inform = vars(args)['info_id_act']
+info = inform.split(',')
+name_of_User = info[0]
+name_of_action = info[1]
 
 K = None
 
@@ -105,7 +108,7 @@ def main():
     list_ports()    
 
     # Open camera device to capture
-    cap = cv2.VideoCapture(2)
+    cap = cv2.VideoCapture(0)
     #fourcc = cv2.VideoWriter_fourcc(*'XVID')
     #out = cv2.VideoWriter('./output.avi', fourcc, 25.0, (640, 480))
     retaining = True
@@ -147,6 +150,8 @@ def main():
                              act.write(str(end))
                              act.write('\n')
                         tarea = tar
+                        act.write(str(name_of_action))
+                        act.write(',')
                         if "Teeth" in tar:
                             act.write('CepillarLosDientes')
                         if "Writing" in tar:
@@ -165,8 +170,11 @@ def main():
                             #act.write(tar)
                             pass
                         act.write(',')
-                        ct = Now.strftime('%d/%m/%Y %H:%M:%S')
+                        ct = Now.strftime('%d/%m/%Y')
                         act.write(str(ct))
+                        act.write(',')
+                        nt = Now.strftime('%H:%M:%S')
+                        act.write(str(nt))
                         count +=1
                         _, frame = cap.read()
                         user = os.path.join(pathh, name_of_User)
@@ -219,10 +227,10 @@ act.close()
 bit = os.path.join(pathh, 'log_' + name_of_User +'.csv')
 with open('./OAD/action-recognition/source/actions.txt', 'r') as in_file:
     lines = in_file.read().splitlines()
-    stripped = [line.replace(","," ").split() for line in lines]
+    stripped = [line.replace(" ","_").replace(","," ").split() for line in lines]
     grouped = zip(*[stripped] * 1)
     with open(bit, 'w') as out_file:
         writer = csv.writer(out_file)
-        writer.writerow(('Action', 'Date', 'T_Start', 'Path', 'T_End'))
+        writer.writerow(('Requested_action', 'Predicted_action', 'Date', 'T_Start', 'Path', 'T_End'))
         for group in grouped:
             writer.writerows(group)
