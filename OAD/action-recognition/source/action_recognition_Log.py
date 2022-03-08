@@ -108,7 +108,7 @@ def main():
     list_ports()    
 
     # Open camera device to capture
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(2)
     #fourcc = cv2.VideoWriter_fourcc(*'XVID')
     #out = cv2.VideoWriter('./output.avi', fourcc, 25.0, (640, 480))
     retaining = True
