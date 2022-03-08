@@ -26,21 +26,6 @@ pip install pillow
 cp ~/gui4lola/LAUNCH_LOLA.desktop ~/Desktop
 ```
 
-4. Create the system services necessary to run ros nodes on startup:
-```shell
-rosrun robot_upstart install lola2_global/launch/basic_lola.launch --job basic_lola --symlink --logdir tempa
-sudo systemctl daemon-reload && sudo systemctl start basic_lola
-
-rosrun robot_upstart install logitech_f710_joy_ros/launch/joy_teleop.launch --job logitech_joy --symlink --logdir tempu
-sudo systemctl daemon-reload && sudo systemctl start logitech_joy
-```
-
-5. Modify the ``logitech_joy.service`` file to include a delay such that it does not interfere with the basic lola package during startup:
-```shell
-sudo vim /etc/systemd/system/multi-user.target.wants/logitech_joy.service
-```
-Then add ``ExecStartPre=/bin/sleep 10`` after ``ExecStart`` line.
-
 # Usage
 
 Just double click on the application desktop icon :D

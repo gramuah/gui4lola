@@ -9,15 +9,21 @@ The application is limited to only the categories that we want, though it is tra
  - opencv=4.4.0
  - numpy=1.19.1
 
-My recommendation is to use conda (it is what I used), but if it's not possible, a virtual environment should work. If conda works, the same environment can be built with the following file:
- - source/c3d-env.yml
+My recommendation is to use conda (it is what I used), but if it's not possible, a virtual environment should work. If conda works, the same environment can be built with the following command:
+ 
+```shell
+conda env create -f source/c3d-env.yml
+```
 
 ### Usage
 
 To run the OAD application:
 
-1) Go to source/ directory
-2) Run the command: python action_recognition.py
+```shell
+conda activate c3d-env
+cd source 
+python action_recognition.py
+```
 
 ### Something about the files:
 
