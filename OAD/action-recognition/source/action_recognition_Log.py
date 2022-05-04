@@ -7,12 +7,7 @@ import os
 import glob
 import argparse
 
-'''
-# Delete all image from the directory of fotos
-removing_files = glob.glob('./fotos/*.jpg')
-for i in removing_files:
-    os.remove(i)
-'''
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--info_id_act', type=str, help='The info for the current user.')
 args = parser.parse_args()
@@ -23,11 +18,15 @@ name_of_action = info[1]
 
 K = None
 
+#load face deteciton classifier
+faceCascade = cv2.CascadeClassifier('./OAD/action-recognition/source/cascades/haarcascade_frontalface_default.xml')
+
 def Mouse_click(event, x, y, flags, param):
     global K
     #Stop video on left mouse click
     if event == cv2.EVENT_LBUTTONDOWN:
         K = 27
+
 
     return K
 
@@ -71,7 +70,7 @@ def list_ports():
         camera = cv2.VideoCapture(dev_port)
         if not camera.isOpened():
             non_working_ports.append(dev_port)
-            print("Port %s is not working." %dev_port)
+            #print("Port %s is not working." %dev_port)
         else:
             is_reading, img = camera.read()
             w = camera.get(3)
@@ -85,6 +84,69 @@ def list_ports():
         dev_port +=1
     return available_ports,working_ports,non_working_ports
 
+def Face_detection(frame, discard):
+    ar_wb = (640 / 480)
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    faces = faceCascade.detectMultiScale(
+        gray,
+        scaleFactor=1.2,
+        minNeighbors=5,
+        minSize=(30, 30)
+    )
+    for (x, y, w, h) in faces:
+        x0 = x + int(w / 2)
+        y0 = y + int(h / 2)
+        ymin = y0 - h
+        ymax = y0 + h
+        xmin = x0 - int(ar_wb * h)
+        xmax = x0 + int(ar_wb * h)
+        # debug_str = 'ymin=' + str(ymin) + ' ymax=' + str(ymax) + ' xmin=' + str(xmin) + 'xmax=' + str(xmax)
+        # print(debug_str)
+        if (ymin <= 0) or (xmin <= 0) or (ymax >= 480) or (xmax >= 640):  # detect failure
+            discard = True
+        else:
+            frame = frame[ymin:ymax, xmin:xmax]            
+            discard = False        
+    return frame,discard
+
+def Upperbody_detection(frame, discard): #Zoom Upperbody part
+    ar_wb = (640 / 480)
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    faces = faceCascade.detectMultiScale(
+        gray,
+        scaleFactor=1.2,
+        minNeighbors=5,
+        minSize=(30, 30)
+    )
+    for (x, y, w, h) in faces:
+        x0 = x + int(w / 2)
+        y0 = y + int(h / 2)
+        ymin = y0 + (2*h)
+        ymax = y0 + (4*h)
+        xmin = x0 - int(ar_wb * h)
+        xmax = x0 + int(ar_wb * h)
+        if (ymin <= 0) or (xmin <= 0) or (ymax >= 480) or (xmax >= 640):  # detect failure
+            discard = True           
+        else:
+            frame = frame[ymin:ymax, xmin:xmax]            
+            discard = False        
+    return frame,discard
+
+def eng_to_spn(lable): #translate classes from english to spanish
+    lable = str(lable)
+    if "Teeth" in lable:
+        lable ='CepillarLosDientes'
+    elif "Writing" in lable:
+        lable = 'EscribirEnLaPizarra'
+    elif "Cutting" in lable:
+        lable ='CortarEnLaCocina'
+    elif "Mopping" in lable:
+        lable ='PasarLaMopa'
+    elif "Hair" in lable:
+        lable = 'SecarElPelo'
+    else:
+        lable = lable
+    return lable
 
 def main():
      
@@ -105,13 +167,14 @@ def main():
     for i, label in enumerate(req_labels):
         req_ind.append(int(label.split(' ')[0]) - 1)
 
-    list_ports()    
+    #list_ports()    
 
     # Open camera device to capture
     cap = cv2.VideoCapture(2)
-    #fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    #out = cv2.VideoWriter('./output.avi', fourcc, 25.0, (640, 480))
+    cap.set(3,640)
+    cap.set (4,480)
     retaining = True
+    discard_frame = False
 
     # Init C3D
     c3d = C3DClipClassification()
@@ -119,8 +182,24 @@ def main():
     clip = []
     while retaining:
         retaining, frame = cap.read()
+        if str(name_of_action) == 'Cepillarse_los_dientes' or str(name_of_action) == 'Secar_el_pelo':
+           frame, discard_frame = Face_detection(frame, discard_frame)
+
+        #elif str(name_of_action) == 'Cortar_en_la_cocina': 
+           #frame, discard_frame = Upperbody_detection(frame, discard_frame)                  
+        else:
+           pass
+
         if not retaining and frame is None:
             continue
+        if frame.size == 0:
+            clip.clear() 
+            continue
+        if discard_frame is True:
+            clip.clear()
+            discard_frame = False
+            continue
+
         tmp_ = center_crop(cv2.resize(frame, (171, 128)))
         tmp = tmp_ - np.array([[[90.0, 98.0, 102.0]]])
         clip.append(tmp)
@@ -134,9 +213,7 @@ def main():
 
             # If it is not a required label
             if pred in req_ind:
-                cv2.putText(frame, class_labels[pred].split(' ')[-1].strip(), (20, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 1)
-                
-                cv2.putText(frame, "prob: %.4f" % prob[0][pred], (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 1)
+                cv2.putText(frame, class_labels[pred].split(' ')[-1].strip(), (20, 45), cv2.FONT_HERSHEY_SIMPLEX, 1.9, (255, 0, 0), 3)
 
                 # Print the predicted actions in a file
                 tar = (class_labels[pred].split(' ')[-1].strip())
@@ -146,46 +223,25 @@ def main():
                         Now = datetime.datetime.now()
                         if count != 0:
                              end = Now.strftime("%H:%M:%S")
-                             act.write(',')
-                             act.write(str(end))
-                             act.write('\n')
+                             act.write(',' + str(end) + '\n')
                         tarea = tar
-                        act.write(str(name_of_action))
-                        act.write(',')
-                        if "Teeth" in tar:
-                            act.write('CepillarLosDientes')
-                        if "Writing" in tar:
-                            act.write('EscribirEnLaPizarra')
-                        if "Typing" in tar:
-                            act.write('Teclear')
-                        if "Cutting" in tar:
-                            act.write('CortarEnLaCocina')
-                        if "Mixing" in tar:
-                            act.write('Mezclar')
-                        if "Mopping" in tar:
-                            act.write('PasarLaMopa')
-                        if "Hair" in tar:
-                            act.write('Peinarse')
-                        else:
-                            #act.write(tar)
-                            pass
-                        act.write(',')
+                        act.write(str(name_of_action) + ',')
+                        tar = eng_to_spn(tar)
+                        act.write(tar + ',')
                         ct = Now.strftime('%d/%m/%Y')
-                        act.write(str(ct))
-                        act.write(',')
+                        act.write(str(ct) + ',')
                         nt = Now.strftime('%H:%M:%S')
                         act.write(str(nt))
                         count +=1
+                        #Save original frame
                         _, frame = cap.read()
                         user = os.path.join(pathh, name_of_User)
                         path = (user +'_'+ str(count)+ '_' +str(tar)+'.jpg')
                         cv2.imwrite(path, frame)
-                        act.write(',')
-                        act.write(str(path))
+                        act.write(',' + str(path))
                         
                 else:
-                    pass
-                    
+                    pass                    
 
             clip.pop(0)
 
@@ -193,15 +249,11 @@ def main():
         cv2.setWindowProperty('result', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
         cv2.imshow('result', frame)
         cv2.waitKey(100)
-        # if cv2.getWindowProperty('result', cv2.WND_PROP_VISIBLE) < 1:
-        #   break
         if K == 27 or cv2.setMouseCallback('result', Mouse_click) or cv2.getWindowProperty('result', cv2.WND_PROP_VISIBLE) < 1:
-            # print('khoond injaro')
             retaining = not retaining
-        #out.write(frame)
+
 
     cap.release()
-    #out.release()
     cv2.destroyAllWindows()
     return
 
@@ -211,18 +263,20 @@ pathh = report(name_of_User)
 if __name__ == '__main__':
     try:
         main()
+
+
     except:
         Now = datetime.datetime.now()
         End = Now.strftime("%H:%M:%S")
-        act.write(',')
-        act.write(str(End))
+        act.write(',' + str(End))
         act.close()
+        print ('Problem in main')
+
 
 # Generate from txt a log.csv
 Now = datetime.datetime.now()
 End = Now.strftime("%H:%M:%S")
-act.write(',')
-act.write(str(End))
+act.write(',' + str(End))
 act.close()
 bit = os.path.join(pathh, 'log_' + name_of_User +'.csv')
 with open('./OAD/action-recognition/source/actions.txt', 'r') as in_file:

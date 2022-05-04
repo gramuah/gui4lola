@@ -9,7 +9,10 @@ class C3DClipClassification():
         # C3D parameters
         self.clip_length = clip_length
         self.model_path = './OAD/action-recognition/models/C3D_UCF101_bs20_epochs50_lr0.0001/model/' \
-                          'params.pkl'
+                           'params.pkl'
+
+        #self.model_path = '../models/C3D_UCF101_bs20_epochs50_lr0.0001/model/' \
+                          #'params.pkl'
 
         # Prepare for GPU
         use_cuda = torch.cuda.is_available()

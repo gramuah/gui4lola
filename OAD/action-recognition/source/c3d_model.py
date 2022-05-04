@@ -3,7 +3,7 @@ import torch.nn as nn
 
 
 WEIGHTS_PATH = './OAD/action-recognition/models/c3d-pretrained.pth'
-
+#WEIGHTS_PATH = '../models/c3d-pretrained.pth'
 
 class C3D(nn.Module):
     """
