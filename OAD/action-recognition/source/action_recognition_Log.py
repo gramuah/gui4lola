@@ -26,8 +26,6 @@ def Mouse_click(event, x, y, flags, param):
     #Stop video on left mouse click
     if event == cv2.EVENT_LBUTTONDOWN:
         K = 27
-
-
     return K
 
 def report (id):
@@ -100,8 +98,6 @@ def Face_detection(frame, discard):
         ymax = y0 + h
         xmin = x0 - int(ar_wb * h)
         xmax = x0 + int(ar_wb * h)
-        # debug_str = 'ymin=' + str(ymin) + ' ymax=' + str(ymax) + ' xmin=' + str(xmin) + 'xmax=' + str(xmax)
-        # print(debug_str)
         if (ymin <= 0) or (xmin <= 0) or (ymax >= 480) or (xmax >= 640):  # detect failure
             discard = True
         else:
@@ -180,30 +176,65 @@ def main():
     c3d = C3DClipClassification()
 
     clip = []
+    frame16 = []
+    Zlist= []
     while retaining:
         retaining, frame = cap.read()
-        if str(name_of_action) == 'Cepillarse_los_dientes' or str(name_of_action) == 'Secar_el_pelo':
-           frame, discard_frame = Face_detection(frame, discard_frame)
+        frame16.append(frame)
+        if len(frame16) == 16:
+            if str(name_of_action) == 'Cepillarse_los_dientes' or str(name_of_action) == 'Secar_el_pelo':
+                #print ('ACT = AB')
+                for i in frame16:
+                    frame, discard_frame = Face_detection(i, discard_frame)
+                    if frame.size == 0:
+                        discard_frame = True
+                    elif discard_frame is True:
+                        discard_frame = True
+                    else:
+                        Zlist.append(frame)
 
-        #elif str(name_of_action) == 'Cortar_en_la_cocina': 
-           #frame, discard_frame = Upperbody_detection(frame, discard_frame)                  
-        else:
-           pass
+                frame16.clear()
+                #print ('Clear AB')
+            elif str(name_of_action) == 'Cortar_en_la_cocina':
+                #print ('ACT = CD')
+                for i in frame16:
+                    frame, discard_frame = Upperbody_detection(i, discard_frame)
+                    if frame.size == 0:
+                        discard_frame = True
+                    elif discard_frame is True:
+                        discard_frame = True
+                    else:
+                        Zlist.append(frame)
 
+                frame16.clear()
+                #print ('Clear CD')
+
+            else:
+                for i in frame16:
+                   Zlist.append(i)
+
+                frame16.clear()
+                #print ('Clear Else')
+
+        
         if not retaining and frame is None:
             continue
         if frame.size == 0:
-            clip.clear() 
+            #print('00000')
+            Zlist.clear()
             continue
         if discard_frame is True:
-            clip.clear()
+            #print('True')
+            Zlist.clear()
             discard_frame = False
             continue
 
-        tmp_ = center_crop(cv2.resize(frame, (171, 128)))
-        tmp = tmp_ - np.array([[[90.0, 98.0, 102.0]]])
-        clip.append(tmp)
+        for frame in Zlist:
+            tmp_ = center_crop(cv2.resize(frame, (171, 128)))
+            tmp = tmp_ - np.array([[[90.0, 98.0, 102.0]]])
+            clip.append(tmp)
         if len(clip) == 16:
+            #print('Created Clip')
             inputs = np.array(clip).astype(np.float32)
             inputs = np.expand_dims(inputs, axis=0)
             inputs = np.transpose(inputs, (0, 4, 1, 2, 3))
@@ -234,21 +265,22 @@ def main():
                         act.write(str(nt))
                         count +=1
                         #Save original frame
-                        _, frame = cap.read()
+                        _, framee = cap.read()
                         user = os.path.join(pathh, name_of_User)
                         path = (user +'_'+ str(count)+ '_' +str(tar)+'.jpg')
-                        cv2.imwrite(path, frame)
+                        cv2.imwrite(path, framee)
                         act.write(',' + str(path))
                         
                 else:
                     pass                    
 
-            clip.pop(0)
 
-        cv2.namedWindow('result', cv2.WINDOW_NORMAL)
-        cv2.setWindowProperty('result', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+        #cv2.namedWindow('result', cv2.WINDOW_NORMAL)
+        #cv2.setWindowProperty('result', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
         cv2.imshow('result', frame)
         cv2.waitKey(100)
+        clip.clear()
+        Zlist.clear()
         if K == 27 or cv2.setMouseCallback('result', Mouse_click) or cv2.getWindowProperty('result', cv2.WND_PROP_VISIBLE) < 1:
             retaining = not retaining
 
@@ -261,17 +293,17 @@ act = open('./OAD/action-recognition/source/actions.txt', 'w')
 pathh = report(name_of_User)
 
 if __name__ == '__main__':
-    try:
+    #try:
         main()
 
-
+''''
     except:
         Now = datetime.datetime.now()
         End = Now.strftime("%H:%M:%S")
         act.write(',' + str(End))
         act.close()
         print ('Problem in main')
-
+'''
 
 # Generate from txt a log.csv
 Now = datetime.datetime.now()
