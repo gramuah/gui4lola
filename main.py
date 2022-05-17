@@ -208,13 +208,8 @@ class App(tk.Tk):
         last_act = str(last_action)
         Req_act = last_act.replace(' ' , '_')
         act = str(User_ID + ',' + Req_act)
-        #print (act)
 
-        #try:
-            #self.last_report_generation.get()
-   
-            #os.system('~/miniconda3/envs/torch55/bin/python ~/gui4lola/OAD/action-recognition/source/action_recognition_Log.py   --user-id '   + User_ID)
-        os.system('~/miniconda3/envs/torch55/bin/python ~/gui4lola/OAD/action-recognition/source/action_recognition_Log.py  --info_id_act '  + act)
+        os.system('~/miniconda3/envs/torch55/bin/python ~/gui4lola/OAD/action-recognition/source/action_recognition_Log_Thread.py  --info_id_act '  + act)
 
         #except:
 

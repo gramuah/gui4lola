@@ -146,8 +146,9 @@ def eng_to_spn(lable): #translate classes from english to spanish
 
 def main():
      
-    tarea = ('none')
+    tarea = ('None')
     count = 0
+    duration = 0
 
     # Class labels
     with open('./OAD/action-recognition/source/ucf_labels.txt', 'r') as f:
@@ -180,10 +181,10 @@ def main():
     Zlist= []
     while retaining:
         retaining, frame = cap.read()
-        frame16.append(frame)
+        framee = frame
+        frame16.append(frame)        
         if len(frame16) == 16:
             if str(name_of_action) == 'Cepillarse_los_dientes' or str(name_of_action) == 'Secar_el_pelo':
-                #print ('ACT = AB')
                 for i in frame16:
                     frame, discard_frame = Face_detection(i, discard_frame)
                     if frame.size == 0:
@@ -194,9 +195,7 @@ def main():
                         Zlist.append(frame)
 
                 frame16.clear()
-                #print ('Clear AB')
             elif str(name_of_action) == 'Cortar_en_la_cocina':
-                #print ('ACT = CD')
                 for i in frame16:
                     frame, discard_frame = Upperbody_detection(i, discard_frame)
                     if frame.size == 0:
@@ -207,24 +206,21 @@ def main():
                         Zlist.append(frame)
 
                 frame16.clear()
-                #print ('Clear CD')
 
             else:
                 for i in frame16:
                    Zlist.append(i)
-
                 frame16.clear()
-                #print ('Clear Else')
 
         
         if not retaining and frame is None:
             continue
         if frame.size == 0:
-            #print('00000')
+            print('00000')
             Zlist.clear()
             continue
         if discard_frame is True:
-            #print('True')
+            print('True')
             Zlist.clear()
             discard_frame = False
             continue
@@ -234,7 +230,6 @@ def main():
             tmp = tmp_ - np.array([[[90.0, 98.0, 102.0]]])
             clip.append(tmp)
         if len(clip) == 16:
-            #print('Created Clip')
             inputs = np.array(clip).astype(np.float32)
             inputs = np.expand_dims(inputs, axis=0)
             inputs = np.transpose(inputs, (0, 4, 1, 2, 3))
@@ -244,7 +239,8 @@ def main():
 
             # If it is not a required label
             if pred in req_ind:
-                cv2.putText(frame, class_labels[pred].split(' ')[-1].strip(), (20, 45), cv2.FONT_HERSHEY_SIMPLEX, 1.9, (255, 0, 0), 3)
+                #cv2.putText(framee, class_labels[pred].split(' ')[-1].strip(), (20, 45), cv2.FONT_HERSHEY_SIMPLEX, 1.9, (255, 0, 0), 3)
+                duration = 10
 
                 # Print the predicted actions in a file
                 tar = (class_labels[pred].split(' ')[-1].strip())
@@ -264,21 +260,24 @@ def main():
                         nt = Now.strftime('%H:%M:%S')
                         act.write(str(nt))
                         count +=1
-                        #Save original frame
-                        _, framee = cap.read()
+                        #Save frame
                         user = os.path.join(pathh, name_of_User)
                         path = (user +'_'+ str(count)+ '_' +str(tar)+'.jpg')
                         cv2.imwrite(path, framee)
                         act.write(',' + str(path))
                         
                 else:
+                    duration = 0
+                    tarea = ('None')
                     pass                    
 
+        if duration > 0:
+             cv2.putText(framee, tarea, (20, 45), cv2.FONT_HERSHEY_SIMPLEX, 1.9, (255, 0, 0), 3)
 
-        #cv2.namedWindow('result', cv2.WINDOW_NORMAL)
-        #cv2.setWindowProperty('result', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-        cv2.imshow('result', frame)
-        cv2.waitKey(100)
+        cv2.namedWindow('result', cv2.WINDOW_NORMAL)
+        cv2.setWindowProperty('result', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+        cv2.imshow('result', framee)
+        cv2.waitKey(50)
         clip.clear()
         Zlist.clear()
         if K == 27 or cv2.setMouseCallback('result', Mouse_click) or cv2.getWindowProperty('result', cv2.WND_PROP_VISIBLE) < 1:
