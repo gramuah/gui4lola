@@ -7,6 +7,7 @@ import os
 import argparse
 import threading
 import sys
+from copy import deepcopy
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--info_id_act', type=str, help='The info for the current user.')
@@ -19,10 +20,12 @@ name_of_action = info[1]
 # Load face detection classifier
 faceCascade = cv2.CascadeClassifier('./OAD/action-recognition/source/cascades/haarcascade_frontalface_default.xml')
 
-# Variables for multithreading
+# Global variables for multithreading
 global frame16
 global clip_ready
 global predicted_label
+global act_log
+
 
 
 # Class for Online Action Detection
@@ -38,8 +41,8 @@ class OAD(threading.Thread):
 
         return np.array(cropped_frame).astype(np.float64)
 
-    def Face_detection(self, frame, discard):
-
+    def Face_detection(self, frame):
+        discard = True
         ar_wb = (640 / 480)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         faces = faceCascade.detectMultiScale(
@@ -62,8 +65,8 @@ class OAD(threading.Thread):
                 discard = False
         return self.zoomed_frame, discard
 
-    def Upperbody_detection(self, frame, discard):
-
+    def Upperbody_detection(self, frame):
+        discard = True
         ar_wb = (640 / 480)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         faces = faceCascade.detectMultiScale(
@@ -92,6 +95,11 @@ class OAD(threading.Thread):
         global frame16
         global clip_ready
         global predicted_label
+        global act_log
+        
+        #Initialize last predicted label
+        last_predicted_label = 'Wait-Loading app'
+        count = 0
 
         with open('./OAD/action-recognition/source/ucf_labels.txt', 'r') as f:
             class_labels = f.readlines()
@@ -119,7 +127,7 @@ class OAD(threading.Thread):
             # Face detection or body detection + cropping
             if str(name_of_action) == 'Cepillarse_los_dientes' or str(name_of_action) == 'Secar_el_pelo':
                 for i in frame16:
-                    frame_face, discard_frame = self.Face_detection(i, discard_frame)
+                    frame_face, discard_frame = self.Face_detection(i)
                     frame_face_array = np.array(frame_face)
 
                     if frame_face_array.size == 0:
@@ -128,21 +136,21 @@ class OAD(threading.Thread):
 
                     if discard_frame is False:
                         Zlist.append(frame_face)
-                    else:
-                        discard_frame = True
+                    else:                        
                         break
 
             elif str(name_of_action) == 'Cortar_en_la_cocina':
                 for i in frame16:
-                    frame_body, discard_frame = self.Upperbody_detection(i, discard_frame)
+                    frame_body, discard_frame = self.Upperbody_detection(i)
                     frame_body_array = np.array(frame_body)
+
                     if frame_body_array.size == 0:
                         discard_frame = True
                         break
+                    
                     if discard_frame is False:
                         Zlist.append(frame_body)
-                    else:
-                        discard_frame = True
+                    else:                        
                         break
             else:
                 for i in frame16:
@@ -173,6 +181,28 @@ class OAD(threading.Thread):
                     predicted_label = (class_labels[pred].split(' ')[-1].strip())
                 else:
                     predicted_label = 'None'
+
+                if last_predicted_label != predicted_label:
+                    Now = datetime.datetime.now()
+                    if count != 0:
+                        end = Now.strftime("%H:%M:%S")
+                        act_log.write(',' + str(end) + '\n')
+                    last_predicted_label = predicted_label
+                    act_log.write(str(name_of_action) + ',')
+                    translated_label = eng_to_spn(predicted_label)
+                    act_log.write(translated_label + ',')
+                    day = Now.strftime('%d/%m/%Y')
+                    act_log.write(str(day) + ',')
+                    hour = Now.strftime('%H:%M:%S')
+                    act_log.write(str(hour))
+                    count += 1
+                    # To save original frame
+                    user = os.path.join(path, name_of_User)
+                    image_path = (user + str(count) + '_' + str(translated_label) + '.jpg')
+                    frame = frame16[-1] #save last frame for the log to generate the report
+                    cv2.imwrite(image_path, frame)
+                    act_log.write(',' + str(image_path))               
+
 
             # Clear variables
             frame16.clear()
@@ -237,8 +267,9 @@ def visualization():
     #global variables
     global frame16
     global clip_ready
-    global predicted_label
+    global predicted_label    
     global K
+    global act_log
 
     # Open camera device to capture
     cap = cv2.VideoCapture(2)
@@ -246,10 +277,10 @@ def visualization():
     cap.set(4, 480)  # set Height
     frame16 = [] #start with an empty clip
     clip_ready = False #start with the clip marked as not ready
-    predicted_label = 'None'
-    performed_action = 'None'
+    predicted_label = 'Wait-Loading app'
+   
     retaining = True
-    count = 0
+    
     K = None
 
 
@@ -260,6 +291,8 @@ def visualization():
 
     while retaining:
         retaining, frame = cap.read()
+        local_frame = deepcopy(frame)      
+
 
         if not retaining and frame is None:
             continue
@@ -269,33 +302,12 @@ def visualization():
 
             if len(frame16) == 16:
                 clip_ready = True
-                if performed_action != predicted_label:
-                    Now = datetime.datetime.now()
-                    if count != 0:
-                        end = Now.strftime("%H:%M:%S")
-                        act_txt.write(',' + str(end) + '\n')
-                    performed_action = predicted_label
-                    act_txt.write(str(name_of_action) + ',')
-                    translated_label = eng_to_spn(predicted_label)
-                    act_txt.write(translated_label + ',')
-                    day = Now.strftime('%d/%m/%Y')
-                    act_txt.write(str(day) + ',')
-                    hour = Now.strftime('%H:%M:%S')
-                    act_txt.write(str(hour))
-                    count += 1
-                    # To save original frame
-                    user = os.path.join(path, name_of_User)
-                    image_path = (user + str(count) + '_' + str(translated_label) + '.jpg')
-                    cv2.imwrite(image_path, frame)
-                    act_txt.write(',' + str(image_path))
-                else:
-                    pass
+                
 
-
-        cv2.putText(frame, predicted_label, (20, 45), cv2.FONT_HERSHEY_SIMPLEX, 1.9,(255, 0, 0), 3)
+        cv2.putText(local_frame, predicted_label, (20, 45), cv2.FONT_HERSHEY_SIMPLEX, 1.9,(255, 0, 0), 3)
         cv2.namedWindow('result', cv2.WINDOW_NORMAL)
         cv2.setWindowProperty('result', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-        cv2.imshow('result', frame)
+        cv2.imshow('result',local_frame)
         cv2.waitKey(100)
         if K == 27 or cv2.setMouseCallback('result', close_Mouse) or cv2.getWindowProperty('result',cv2.WND_PROP_VISIBLE) < 1:
             retaining = not retaining
@@ -306,8 +318,8 @@ def visualization():
     # Generate from txt a log.csv
     Now = datetime.datetime.now()
     End = Now.strftime("%H:%M:%S")
-    act_txt.write(',' + str(End))
-    act_txt.close()
+    act_log.write(',' + str(End))
+    act_log.close()
     User_log = os.path.join(path, 'log_' + name_of_User + '.csv')
     with open('./OAD/action-recognition/source/actions.txt', 'r') as in_file:
          lines = in_file.read().splitlines()
@@ -323,8 +335,8 @@ def visualization():
     return
 
 
-
-act_txt = open('./OAD/action-recognition/source/actions.txt', 'w')
+global act_log
+act_log = open('./OAD/action-recognition/source/actions.txt', 'w')
 path = report(name_of_User)
 
 if __name__ == '__main__':
