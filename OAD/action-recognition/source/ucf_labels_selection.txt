@@ -1,7 +1,3 @@
 20 BrushingTeeth
-25 CuttingInKitchen
-35 Mixing
-95 Typing
 100 WritingOnBoard
 55 MoppingFloor
-13 BlowDryHair
