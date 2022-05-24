@@ -91,7 +91,7 @@ class App(tk.Tk):
         # Prepare buttons for the dialog
         # Button to start activity (with video visualization)
         tk.Button(self.window_oaa,
-                  text='Comenzar Actividad', font=("Helvetica", 25),
+                  text='Observación de la Actividad', font=("Helvetica", 25),
                   command=self.on_activity, width="25", height="3").place(x=260, y=100)
 
         # Button to start monitorization

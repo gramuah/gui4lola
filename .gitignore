@@ -130,3 +130,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+OAD/action-recognition/models/
+OAD/action-recognition/source/cascades/
+OAD/action-recognition/source/fotos/
+OAD/action-recognition/source/#action_recognition_Log_Thread.py#
