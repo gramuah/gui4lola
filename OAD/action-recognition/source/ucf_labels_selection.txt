@@ -1,3 +1,4 @@
 20 BrushingTeeth
 100 WritingOnBoard
 55 MoppingFloor
+13 BlowDryHair

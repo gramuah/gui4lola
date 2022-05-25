@@ -253,7 +253,7 @@ def eng_to_spn(label):
     elif "Cutting" in label:
         label = 'CortarEnLaCocina'
     elif "Mopping" in label:
-        label = 'PasarLaMopa'
+        label = 'PasarLaFreguna'
     elif "Writting" in label:
         label = 'EscribirEnLaPizarra'
     else:
