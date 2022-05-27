@@ -1,11 +1,3 @@
-Secar_el_pelo,CepillarLosDientes,25/05/2022,11:17:44,./OAD/action-recognition/source/fotos/UAH_01/25_05_2022/UAH_011_CepillarLosDientes.jpg,11:17:57
-Secar_el_pelo,None,25/05/2022,11:17:57,./OAD/action-recognition/source/fotos/UAH_01/25_05_2022/UAH_012_None.jpg,11:18:11
-Secar_el_pelo,SecarELPelo,25/05/2022,11:18:11,./OAD/action-recognition/source/fotos/UAH_01/25_05_2022/UAH_013_SecarELPelo.jpg,11:18:16
-Secar_el_pelo,None,25/05/2022,11:18:16,./OAD/action-recognition/source/fotos/UAH_01/25_05_2022/UAH_014_None.jpg,11:18:28
-Secar_el_pelo,SecarELPelo,25/05/2022,11:18:28,./OAD/action-recognition/source/fotos/UAH_01/25_05_2022/UAH_015_SecarELPelo.jpg,11:18:40
-Secar_el_pelo,None,25/05/2022,11:18:40,./OAD/action-recognition/source/fotos/UAH_01/25_05_2022/UAH_016_None.jpg,11:18:43
-Secar_el_pelo,SecarELPelo,25/05/2022,11:18:43,./OAD/action-recognition/source/fotos/UAH_01/25_05_2022/UAH_017_SecarELPelo.jpg,11:18:46
-Secar_el_pelo,None,25/05/2022,11:18:46,./OAD/action-recognition/source/fotos/UAH_01/25_05_2022/UAH_018_None.jpg,11:18:49
-Secar_el_pelo,SecarELPelo,25/05/2022,11:18:49,./OAD/action-recognition/source/fotos/UAH_01/25_05_2022/UAH_019_SecarELPelo.jpg,11:18:52
-Secar_el_pelo,None,25/05/2022,11:18:52,./OAD/action-recognition/source/fotos/UAH_01/25_05_2022/UAH_0110_None.jpg,11:18:56
-Secar_el_pelo,CepillarLosDientes,25/05/2022,11:18:56,./OAD/action-recognition/source/fotos/UAH_01/25_05_2022/UAH_0111_CepillarLosDientes.jpg,11:19:01
+Pasar_la_fregona,None,27/05/2022,12:06:16,./OAD/action-recognition/source/fotos/UAH_06/27_05_2022/UAH_061_None.jpg,12:06:19
+Pasar_la_fregona,EscribirEnLaPizarra,27/05/2022,12:06:19,./OAD/action-recognition/source/fotos/UAH_06/27_05_2022/UAH_062_EscribirEnLaPizarra.jpg,12:06:38
+Pasar_la_fregona,SecarELPelo,27/05/2022,12:06:38,./OAD/action-recognition/source/fotos/UAH_06/27_05_2022/UAH_063_SecarELPelo.jpg,12:06:45

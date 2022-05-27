@@ -1,4 +1,4 @@
-20 BrushingTeeth
-100 WritingOnBoard
-55 MoppingFloor
-13 BlowDryHair
+20 CepillarLosDientes
+100 EscribirEnLePizarra
+55 PasarLafregona
+13 SecarElPelo

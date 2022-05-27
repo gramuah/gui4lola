@@ -246,15 +246,15 @@ def report(id):
 # Function to translate labels from english to spanish in reports
 def eng_to_spn(label):  
     label = str(label)
-    if "Hair" in label:
+    if "Pelo" in label:
         label = 'SecarELPelo'
-    elif "Teeth" in label:
+    elif "Dientes" in label:
         label = 'CepillarLosDientes'
     elif "Cutting" in label:
         label = 'CortarEnLaCocina'
-    elif "Mopping" in label:
+    elif "Fregona" in label:
         label = 'PasarLaFreguna'
-    elif "Writting" in label:
+    elif "Pizarra" in label:
         label = 'EscribirEnLaPizarra'
     else:
         label = label
