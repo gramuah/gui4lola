@@ -2,13 +2,14 @@
 import json
 import os
 import random
-import tkinter as tk
+# import tkinter as tk
+import customtkinter as tk
 import tkinter.font as font
 from tkvlc import Player
 from utilities import ImageLabel
 
 
-class App(tk.Tk):
+class App(tk.CTk):
     """
     Main dialog (root window)
     """
@@ -28,15 +29,15 @@ class App(tk.Tk):
         lbl.place(x=270, y=35)
         lbl.load('data/Gif/robot.gif')
 
-        # place a button on the root window for action analysis window
-        tk.Button(self,
+        # place a CTkButton on the root window for action analysis window
+        tk.CTkButton(self,
                   text='Comenzar',
-                  command=self.open_action_analysis, font=self.default_font,  width="10", height="2").place(x=25, y=460)
-        tk.Button(self,
+                  command=self.open_action_analysis, width=10, height=2).place(x=25, y=460)
+        tk.CTkButton(self,
                   text='Configuración',
-                  command=self.open_configuration, font=self.default_font,  width="12", height="2").place(x=350, y=460)
-        tk.Button(self,
-                  text="Salir", font=self.default_font,  width="10", height="2",
+                  command=self.open_configuration, width=12, height=2).place(x=350, y=460)
+        tk.CTkButton(self,
+                  text="Salir", width=10, height=2,
                   command=lambda: self.destroy()).place(x=720, y=460)
 
     @staticmethod
@@ -74,7 +75,7 @@ class App(tk.Tk):
 
     def __save_data_check(self):
         """
-        Function to save the check button data to a dict
+        Function to save the check CTkButton data to a dict
         """
         self.config_data["users_info"][self.last_id.get()]["last_oaa"] = self.last_online_action_detection.get()
         self.config_data["users_info"][self.last_id.get()]["last_pe"] = self.last_pose_estimation.get()
@@ -88,19 +89,19 @@ class App(tk.Tk):
         self.window_oaa.grab_set()
         self.window_oaa.attributes("-fullscreen", True)
         self.window_oaa.title('LOLA - Monitorizacion de acciones')
-        # Prepare buttons for the dialog
-        # Button to start activity (with video visualization)
-        tk.Button(self.window_oaa,
+        # Prepare CTkButtons for the dialog
+        # CTkButton to start activity (with video visualization)
+        tk.CTkButton(self.window_oaa,
                   text='Observación de la Actividad', font=("Helvetica", 25),
                   command=self.on_activity, width="25", height="3").place(x=260, y=100)
 
-        # Button to start monitorization
-        tk.Button(self.window_oaa,
+        # CTkButton to start monitorization
+        tk.CTkButton(self.window_oaa,
                   text='Comenzar Monitorización', font=("Helvetica", 25),
                   command=self.on_monitorization, width="25", height="3").place(x=260, y=250)
 
-        # Button to exit
-        tk.Button(self.window_oaa,
+        # CTkButton to exit
+        tk.CTkButton(self.window_oaa,
                   text="Salir", font=("Helvetica", 25),
                   command=lambda: self.window_oaa.destroy(), width="25", height="3").place(x=260, y=400)
         self.window_oaa.mainloop()
@@ -118,7 +119,7 @@ class App(tk.Tk):
         window_config.attributes("-fullscreen", True)
         window_config.title('LOLA - Configuración del dispositivo')
 
-        # Prepare buttons for the dialog
+        # Prepare CTkButtons for the dialog
         conf_label = tk.Label(window_config, text="Configuración", font=("Helvetica", 30)).place(x=390, y=30)
         dni_label = tk.Label(window_config, text="Usuario", font=("Helvetica", 20)).place(x=22, y=95)
         action_label = tk.Label(window_config, text="Acciones",font=("Helvetica", 20)).place(x=675, y=95)
@@ -155,29 +156,29 @@ class App(tk.Tk):
         menu2.config(font=("Helvetica", 15))
         action.place(x=675, y=130)
 
-        button_oaa = tk.Checkbutton(window_config,
+        CTkButton_oaa = tk.CheckCTkButton(window_config,
                                     text='SI', font=("Helvetica", 12),
                                     variable=self.last_online_action_detection,
                                     onvalue=True,
                                     offvalue=False,
                                     command=self.__save_data_check, width="10", height="3").place(x=470, y=270)
-        button_pe = tk.Checkbutton(window_config,
+        CTkButton_pe = tk.CheckCTkButton(window_config,
                                    text='SI', font=("Helvetica", 12),
                                    variable=self.last_pose_estimation,
                                    onvalue=True,
                                    offvalue=False,
                                    command=self.__save_data_check, width="10", height="3").place(x=470, y=370)
-        button_rg = tk.Checkbutton(window_config,
+        CTkButton_rg = tk.CheckCTkButton(window_config,
                                    text='SI', font=("Helvetica", 12),
                                    variable=self.last_report_generation,
                                    onvalue=True,
                                    offvalue=False,
                                    command=self.__save_data_check, width="10", height="3").place(x=470, y=470)
 
-        submit_btn = tk.Button(window_config, text="Guardar", font=("Helvetica", 20), command=self.__close_file, width="15", height="2").place(
+        submit_btn = tk.CTkButton(window_config, text="Guardar", font=("Helvetica", 20), command=self.__close_file, width="15", height="2").place(
             x=50, y=500)
 
-        exit_button = tk.Button(window_config, text="Salir", font=("Helvetica", 20), command=lambda: window_config.destroy(), width="15", height="2").place(x=725, y=500)
+        exit_CTkButton = tk.CTkButton(window_config, text="Salir", font=("Helvetica", 20), command=lambda: window_config.destroy(), width="15", height="2").place(x=725, y=500)
 
         window_config.mainloop()
 
