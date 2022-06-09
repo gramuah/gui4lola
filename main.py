@@ -17,7 +17,6 @@ class App(tk.Tk):
         super().__init__()
 
         self.title('Bienvenidos a LOLA')
-        # self.wm_iconbitmap("/home/ivanf/proyects/gui4lola/data/Image/robot.ico")
         self.attributes("-fullscreen", True)
         self.path = "config/config.json"
         self.config_data = None
