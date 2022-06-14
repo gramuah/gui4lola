@@ -18,25 +18,17 @@ def generate_report(filename):
     report_elements = list()
 
     for row in data.iterrows():
-        input_images_path = row[1]['Path']
-        report_elements.append(dp.Table(pd.DataFrame(row[1])))
-        list_dir = os.listdir(input_images_path)
-        if len(list_dir) % 2 == 0:
-            columns = 2
-        else:
-            columns = 3
-        list_images = list()
-        for image_dir in list_dir:
-            list_images.append(dp.Media(file=os.path.join(input_images_path, image_dir)))
-        report_elements.append(dp.Group(*list_images, columns=columns))
+        input_image_path = row[1]['Path']
+        report_elements.append(dp.Table(pd.DataFrame(row[1]).drop(index=['Path'], axis=0)))
+        report_elements.append(dp.Media(file=input_image_path))
 
     dp.Report(
         dp.Group(
             dp.Text("# Report de {}".format(user_name)),
-            dp.Media(file='data/Fondo/fondo_blanco.jpg'),
-            dp.Media(file='data/Image/uah.jpg'),
-            dp.Media(file='data/Image/logo_air4dp.png'),
+            dp.Media(file='~/gui4lola/data/Fondo/fondo_blanco.jpg'),
+            dp.Media(file='~/gui4lola/data/Image/uah.jpg'),
+            dp.Media(file='~/gui4lola/data/Image/logo_air4dp.png'),
             columns=4
         ),
         *[element for element in report_elements],
-    ).save(path="Hello_world.html")
+    ).save(path="Informe-{}.html".format(user_name))
