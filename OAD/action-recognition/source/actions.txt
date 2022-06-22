@@ -1,3 +1,1 @@
-Pasar_la_fregona,None,27/05/2022,12:06:16,./OAD/action-recognition/source/fotos/UAH_06/27_05_2022/UAH_061_None.jpg,12:06:19
-Pasar_la_fregona,EscribirEnLaPizarra,27/05/2022,12:06:19,./OAD/action-recognition/source/fotos/UAH_06/27_05_2022/UAH_062_EscribirEnLaPizarra.jpg,12:06:38
-Pasar_la_fregona,SecarELPelo,27/05/2022,12:06:38,./OAD/action-recognition/source/fotos/UAH_06/27_05_2022/UAH_063_SecarELPelo.jpg,12:06:45
+,10:18:11

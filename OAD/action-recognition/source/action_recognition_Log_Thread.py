@@ -327,7 +327,7 @@ def visualization():
          grouped = zip(*[stripped] * 1)
          with open(User_log, 'w') as out_file:
             writer = csv.writer(out_file)
-            writer.writerow(('Requested_Action', 'Predicted_Action', 'Date', 'T_Start', 'Path', 'T_End'))
+            writer.writerow(('Acción_Requerida', 'Acción_Detectada', 'Fecha', 'Hora_Comienzo', 'Path', 'Hora_Finalización'))
             for group in grouped:
                 writer.writerows(group)
 
