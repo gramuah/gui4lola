@@ -2,15 +2,6 @@ import pandas as pd
 import os
 import datapane as dp
 
-# Variables
-# input_csv_path = '~/Downloads/log_nadia.csv'
-# input_images_prefix_path = '/data/Image'
-#
-# user_name = input_csv_path.split('_')[-1].split('.')[0]
-#
-# # Load csv
-# data = pd.read_csv('~/Downloads/log_nadia.csv')
-
 
 def generate_report(filename):
     data = pd.read_csv(filename)
