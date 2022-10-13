@@ -1,9 +1,11 @@
 # GUI 4 LOLA
-Repo containing the source of the GIU for LOLA platform **prepared to work only with our Jetson Xavier inside rober user**. However, changing the .desktop file and the launch.sh you could adapt it to different platforms and users.
+Repo containing the source of the GUI for LOLA platform **prepared to work only with our Jetson Xavier inside rober user**. However, changing the .desktop file and the launch.sh you could adapt it to different platforms and users.
 
 # Installation
 
 This guide assumes you already have a working ros workspace with [Lola 2](https://github.com/gramuah/lola2), [Logitech F710](https://github.com/husarion/logitech_f710_ros) and [Robot Upstart](https://roboticsbackend.com/make-ros-launch-start-on-boot-with-robot_upstart/) packages.
+
+If you want to, you can directly use this [script](install_gui4lola.sh).
 
 1. First clone this repository (it is a private repo, so we encourage you to use [ssh keys](https://docs.github.com/es/authentication/connecting-to-github-with-ssh) once you are authorized):
 
