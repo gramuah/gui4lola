@@ -46,4 +46,4 @@ def generate_report(filename):
             columns=4
         ),
         *[element for element in report_elements],
-    ).save(path="Informe-{}.html".format(user_name))
+    ).save(path="Reports/Informe-{}.html".format(user_name))

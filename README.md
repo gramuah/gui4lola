@@ -29,3 +29,16 @@ cp ~/gui4lola/LAUNCH_LOLA.desktop ~/Desktop
 # Usage
 
 Just double click on the application desktop icon :D
+
+# Usage report generator
+
+First of all we must run the report generation file in a terminal
+
+``` sheel
+cd gui4lola/
+python3 report_generator.py
+```
+
+![ejemplo de report](data/Image/Generarinformes.png)
+
+Once we have the program open, we must press the "Generar Informe" button and select the file we want to generate. The generated file will be saved in "gui4lola/Reports" and will be a html file.
