@@ -1,4 +1,4 @@
-# SVC for Unsupervised Temporal Action Proposals
+# Online Action Detection
 
 Online Action Detection (OAD) with C3D. The C3D model is trained on the UCF101 dataset (Thumos14 is a subset of UCF101). The model achieves about a 73% clip accuracy on the first test split. (Kind of a good number).
 The application is limited to only the categories that we want, though it is trained to detect the 101 categories.
